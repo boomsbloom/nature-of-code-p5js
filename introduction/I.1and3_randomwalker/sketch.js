@@ -19,6 +19,8 @@ function walker() {
     point(this.x, this.y)
   }
 
+  tx = 0
+  ty = 10000
   this.step = function() {
     //up, down, left, right
     //choice = int(random(4))
@@ -78,17 +80,39 @@ function walker() {
     // }
 
     //Gaussian random walk
-    xChoice = randomGaussian()
-    yChoice = randomGaussian()
+    //xChoice = randomGaussian()
+    //yChoice = randomGaussian()
 
     //floats
-    stepx = random(-1, 1)
-    stepy = random(-1, 1)
+    //custom distribution of random numbers
+    //stepsize = montecarlo()
+    //stepx = random(-stepsize, stepsize)
+    //stepy = random(-stepsize, stepsize)
 
-    this.x += xChoice
-    this.y += yChoice
+    //perlin noise step map
+    noiseStepX = map(noise(tx), 0, 1, 0, 4)
+    noiseStepY = map(noise(ty), 0, 1, 0, 4)
 
+    stepx = random(-noiseStepX, noiseStepX)
+    stepy = random(-noiseStepY, noiseStepY)
+
+    this.x += stepx
+    this.y += stepy
+
+    tx += 0.01
+    ty += 0.01
 
   }
 
+}
+
+function montecarlo() {
+  r1 = random(-1, 1)
+  p = r1^2
+  r2 = random(1)
+  if (r2 < p) {
+    return r1
+  } else {
+    montecarlo()
+  }
 }
